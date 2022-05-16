@@ -1,0 +1,94 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["interactiveTransactions"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Color {
+  WHITE
+  BLACK
+  BLUE
+  RED
+  GREEN
+}
+
+enum Archetype {
+  AGGRO
+  MIDRANGE
+  CONTROL
+  COMBO
+}
+
+enum EventType {
+  RANKED
+  UNRANKED
+}
+
+model Player {
+  id        String         @id @default(uuid())
+  firstName String         @db.VarChar(255)
+  lastName  String         @db.VarChar(255)
+  username  String         @unique @db.VarChar(255)
+  results   Result[]
+  leagues   PlayerLeague[]
+}
+
+model Deck {
+  id        String    @id @default(uuid())
+  name      String    @unique @db.VarChar(255)
+  archetype Archetype
+  colors    Color[]
+  Result    Result[]
+}
+
+model Result {
+  Event    Event  @relation(fields: [eventId], references: [id])
+  eventId  String
+  Player   Player @relation(fields: [playerId], references: [id])
+  playerId String
+  Deck     Deck   @relation(fields: [deckId], references: [id])
+  deckId   String
+  rank     Int    @db.Integer
+  score    Int    @db.Integer
+
+  @@id([eventId, playerId])
+}
+
+model Event {
+  id       String    @id @default(uuid())
+  name     String    @db.VarChar(255)
+  type     EventType
+  season   Season    @relation(fields: [seasonId], references: [id])
+  seasonId String
+  League   League    @relation(fields: [leagueId], references: [id])
+  leagueId String
+  results  Result[]
+}
+
+model Season {
+  id     String   @id @default(uuid())
+  name   String   @db.VarChar(255)
+  endsAt DateTime @db.Date
+  Event  Event[]
+}
+
+model League {
+  id      String         @id @default(uuid())
+  tag     String         @unique @db.VarChar(255)
+  name    String         @db.VarChar(255)
+  events  Event[]
+  players PlayerLeague[]
+}
+
+model PlayerLeague {
+  Player   Player @relation(fields: [playerId], references: [id])
+  playerId String
+  League   League @relation(fields: [leagueId], references: [id])
+  leagueId String
+
+  @@id([leagueId, playerId])
+}
