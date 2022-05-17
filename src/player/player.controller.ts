@@ -6,7 +6,6 @@ import {
 	Param,
 	Post,
 	Put,
-	Query,
 } from "@nestjs/common";
 import { AddPlayerDTO, DeletePlayerDTO, EditPlayerDTO } from "./dto";
 import { PlayerService } from "./player.service";
