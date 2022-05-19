@@ -1,7 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import { Result } from "@prisma/client";
 import { PrismaService } from "src/prisma/prisma.service";
-import { ResultDTO } from "src/result/dto";
+import { AddResultDTO } from "src/result/dto";
 import { AddEventDTO, DeleteEventDTO, EditEventDTO } from "./dto";
 
 @Injectable()
@@ -13,7 +12,9 @@ export class EventService {
 	}
 
 	async getAll() {
-		return await this.prismaService.event.findMany();
+		return await this.prismaService.event.findMany({
+			include: { results: { orderBy: { rank: "asc" }, take: 1 } },
+		});
 	}
 
 	async getOneById(id: string) {
@@ -35,18 +36,16 @@ export class EventService {
 			});
 
 			const results = await prisma.result.createMany({
-				data: dto.results.map(
-					(result): Result => ({
-						eventId: event.id,
-						playerId: result.playerId,
-						deckId: result.deckId,
-						score: result.score,
-						rank: result.rank,
-					})
-				),
+				data: dto.results.map((result: AddResultDTO) => ({
+					eventId: event.id,
+					playerId: result.playerId,
+					deckId: result.deckId,
+					score: result.score,
+					rank: result.rank,
+				})),
 			});
 
-			return event;
+			return { event, results };
 		});
 	}
 
@@ -55,6 +54,6 @@ export class EventService {
 	}
 
 	async delete(dto: DeleteEventDTO) {
-		throw new Error("Method not implemented.");
+		await this.prismaService.result.delete({ where: { id: dto.id } });
 	}
 }

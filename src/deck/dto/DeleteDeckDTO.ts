@@ -1,6 +1,6 @@
 import { IsUUID } from "class-validator";
 
-export class DeleteEventDTO {
+export class DeleteDeckDTO {
 	@IsUUID()
 	id: string;
 }

@@ -46,6 +46,7 @@ model Deck {
 }
 
 model Result {
+  id       String @id @default(uuid())
   Event    Event  @relation(fields: [eventId], references: [id])
   eventId  String
   Player   Player @relation(fields: [playerId], references: [id])
@@ -54,8 +55,6 @@ model Result {
   deckId   String
   rank     Int    @db.Integer
   score    Int    @db.Integer
-
-  @@id([eventId, playerId])
 }
 
 model Event {
@@ -85,10 +84,9 @@ model League {
 }
 
 model PlayerLeague {
+  id       String @id @default(uuid())
   Player   Player @relation(fields: [playerId], references: [id])
   playerId String
   League   League @relation(fields: [leagueId], references: [id])
   leagueId String
-
-  @@id([leagueId, playerId])
 }

@@ -1,6 +1,9 @@
-import { IsInt, IsPositive, IsUUID } from "class-validator";
+import { IsInt, IsNumber, IsPositive, IsUUID } from "class-validator";
 
-export class AddResultDTO {
+export class EditResultDTO {
+	@IsUUID()
+	id: string;
+
 	@IsUUID()
 	playerId: string;
 
