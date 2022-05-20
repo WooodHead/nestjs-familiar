@@ -4,7 +4,6 @@ import {
 	Delete,
 	Get,
 	Injectable,
-	Param,
 	Post,
 	Put,
 } from "@nestjs/common";

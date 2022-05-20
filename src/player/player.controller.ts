@@ -7,7 +7,13 @@ import {
 	Post,
 	Put,
 } from "@nestjs/common";
-import { AddPlayerDTO, DeletePlayerDTO, EditPlayerDTO } from "./dto";
+import {
+	AddPlayerDTO,
+	DeletePlayerDTO,
+	EditPlayerDTO,
+	GetPlayerByIdDTO,
+	GetPlayerResultsDTO,
+} from "./dto";
 import { PlayerService } from "./player.service";
 
 @Controller("players")
@@ -24,13 +30,13 @@ export class PlayerController {
 	}
 
 	@Get("/:id")
-	async getOneById(@Param("id") id: string) {
-		return await this.playerService.getOneById(id);
+	async getOneById(@Body() dto: GetPlayerByIdDTO) {
+		return await this.playerService.getOneById(dto);
 	}
 
-	@Get("/:id/events")
-	async getPlayerEvents(@Param("id") id: string) {
-		return await this.playerService.getPlayerResults(id);
+	@Get("/:id/results")
+	async getPlayerResults(@Body() dto: GetPlayerResultsDTO) {
+		return await this.playerService.getPlayerResults(dto);
 	}
 
 	@Post()
