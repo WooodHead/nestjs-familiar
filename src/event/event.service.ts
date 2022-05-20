@@ -1,7 +1,12 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { AddResultDTO } from "src/result/dto";
-import { AddEventDTO, DeleteEventDTO, EditEventDTO } from "./dto";
+import {
+	AddEventDTO,
+	DeleteEventDTO,
+	EditEventDTO,
+	GetEventByIdDTO,
+} from "./dto";
 
 @Injectable()
 export class EventService {
@@ -17,9 +22,9 @@ export class EventService {
 		});
 	}
 
-	async getOneById(id: string) {
+	async getOneById(dto: GetEventByIdDTO) {
 		return await this.prismaService.event.findUnique({
-			where: { id },
+			where: { id: dto.id },
 			include: { results: { orderBy: { rank: "asc" }, take: 1 } },
 		});
 	}

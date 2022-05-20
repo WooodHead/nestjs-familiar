@@ -8,7 +8,7 @@ import {
 	Put,
 } from "@nestjs/common";
 import { DeckService } from "./deck.service";
-import { AddDeckDTO, DeleteDeckDTO, EditDeckDTO } from "./dto";
+import { AddDeckDTO, DeleteDeckDTO, EditDeckDTO, GetDeckByIdDTO } from "./dto";
 
 @Controller("deck")
 export class DeckController {
@@ -24,8 +24,8 @@ export class DeckController {
 	}
 
 	@Get("/:id")
-	async getOneById(@Param("id") id: string) {
-		return await this.eventService.getOneById(id);
+	async getOneById(@Body() dto: GetDeckByIdDTO) {
+		return await this.eventService.getOneById(dto);
 	}
 
 	@Post()

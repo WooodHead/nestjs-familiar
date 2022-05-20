@@ -7,7 +7,12 @@ import {
 	Post,
 	Put,
 } from "@nestjs/common";
-import { AddEventDTO, DeleteEventDTO, EditEventDTO } from "./dto";
+import {
+	AddEventDTO,
+	DeleteEventDTO,
+	EditEventDTO,
+	GetEventByIdDTO,
+} from "./dto";
 import { EventService } from "./event.service";
 
 @Controller("events")
@@ -24,8 +29,8 @@ export class EventController {
 	}
 
 	@Get("/:id")
-	async getOneById(@Param("id") id: string) {
-		return await this.eventService.getOneById(id);
+	async getOneById(@Body() dto: GetEventByIdDTO) {
+		return await this.eventService.getOneById(dto);
 	}
 
 	@Post()

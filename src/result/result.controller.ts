@@ -8,7 +8,12 @@ import {
 	Post,
 	Put,
 } from "@nestjs/common";
-import { AddResultDTO, DeleteResultDTO, EditResultDTO } from "./dto";
+import {
+	AddResultDTO,
+	DeleteResultDTO,
+	EditResultDTO,
+	GetResultByIdDTO,
+} from "./dto";
 import { ResultService } from "./result.service";
 
 @Injectable()
@@ -26,8 +31,8 @@ export class ResultController {
 	}
 
 	@Get("/:id")
-	async getOneById(@Param("id") id: string) {
-		return await this.resultService.getOneById(id);
+	async getOneById(@Body() dto: GetResultByIdDTO) {
+		return await this.resultService.getOneById(dto);
 	}
 
 	@Post()

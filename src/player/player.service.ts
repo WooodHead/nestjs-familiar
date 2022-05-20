@@ -1,6 +1,12 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
-import { AddPlayerDTO, DeletePlayerDTO, EditPlayerDTO } from "./dto";
+import {
+	AddPlayerDTO,
+	DeletePlayerDTO,
+	EditPlayerDTO,
+	GetPlayerByIdDTO,
+	GetPlayerResultsDTO,
+} from "./dto";
 
 @Injectable()
 export class PlayerService {
@@ -14,15 +20,15 @@ export class PlayerService {
 		return await this.prisma.player.findMany();
 	}
 
-	async getOneById(id: string) {
-		return this.prisma.player.findUnique({ where: { id } });
+	async getOneById(dto: GetPlayerByIdDTO) {
+		return this.prisma.player.findUnique({ where: { id: dto.id } });
 	}
 
-	async getPlayerResults(id: string) {
+	async getPlayerResults(dto: GetPlayerResultsDTO) {
 		return this.prisma.result.findMany({
-			where: { playerId: id },
+			where: { playerId: dto.id },
 			include: {
-				Event: {},
+				Event: true,
 			},
 		});
 	}

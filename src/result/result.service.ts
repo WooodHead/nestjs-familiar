@@ -1,6 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
-import { AddResultDTO, DeleteResultDTO, EditResultDTO } from "./dto";
+import {
+	AddResultDTO,
+	DeleteResultDTO,
+	EditResultDTO,
+	GetResultByIdDTO,
+} from "./dto";
 
 @Injectable()
 export class ResultService {
@@ -14,8 +19,10 @@ export class ResultService {
 		return await this.prismaService.result.findMany();
 	}
 
-	async getOneById(id: string) {
-		return await this.prismaService.result.findUnique({ where: { id } });
+	async getOneById(dto: GetResultByIdDTO) {
+		return await this.prismaService.result.findUnique({
+			where: { id: dto.id },
+		});
 	}
 
 	async create(dto: AddResultDTO) {

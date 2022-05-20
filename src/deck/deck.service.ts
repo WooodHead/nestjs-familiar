@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
-import { AddDeckDTO, DeleteDeckDTO, EditDeckDTO } from "./dto";
+import { AddDeckDTO, DeleteDeckDTO, EditDeckDTO, GetDeckByIdDTO } from "./dto";
 
 @Injectable()
 export class DeckService {
@@ -14,8 +14,8 @@ export class DeckService {
 		return await this.prismaService.deck.findMany();
 	}
 
-	async getOneById(id: string) {
-		return await this.prismaService.deck.findUnique({ where: { id } });
+	async getOneById(dto: GetDeckByIdDTO) {
+		return await this.prismaService.deck.findUnique({ where: { id: dto.id } });
 	}
 
 	async create(dto: AddDeckDTO) {

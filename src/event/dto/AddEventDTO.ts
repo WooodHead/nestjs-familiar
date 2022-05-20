@@ -1,6 +1,6 @@
 import { EventType } from "@prisma/client";
 import { IsNotEmpty, IsString, IsUUID } from "class-validator";
-import { ResultDTO } from "src/result/dto";
+import { AddResultDTO } from "src/result/dto";
 
 export class AddEventDTO {
 	@IsString()
@@ -17,5 +17,5 @@ export class AddEventDTO {
 	@IsUUID()
 	seasonId: string;
 
-	results: ResultDTO[];
+	results: AddResultDTO[];
 }
