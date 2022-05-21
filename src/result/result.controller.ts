@@ -4,24 +4,21 @@ import {
 	Delete,
 	Get,
 	Injectable,
+	Param,
 	Post,
 	Put,
 } from "@nestjs/common";
-import {
-	AddResultDTO,
-	DeleteResultDTO,
-	EditResultDTO,
-	GetResultByIdDTO,
-} from "./dto";
+import { AddResultDTO, EditResultDTO, GetResultByIdDTO } from "./dto";
 import { ResultService } from "./result.service";
 
 @Injectable()
 @Controller("results")
 export class ResultController {
-	private resultService: ResultService;
+	constructor(private resultService: ResultService) {}
 
-	constructor(resultService: ResultService) {
-		this.resultService = resultService;
+	@Post()
+	async add(@Body() body: AddResultDTO) {
+		return await this.resultService.create(body);
 	}
 
 	@Get()
@@ -30,22 +27,17 @@ export class ResultController {
 	}
 
 	@Get("/:id")
-	async getOneById(@Body() dto: GetResultByIdDTO) {
-		return await this.resultService.getOneById(dto);
+	async getOneById(@Param() params: GetResultByIdDTO) {
+		return await this.resultService.getOneById(params);
 	}
 
-	@Post()
-	async add(@Body() dto: AddResultDTO) {
-		return await this.resultService.create(dto);
+	@Put("/:id")
+	async update(@Param() params: GetResultByIdDTO, @Body() body: EditResultDTO) {
+		return await this.resultService.edit(params, body);
 	}
 
-	@Put()
-	async update(@Body() dto: EditResultDTO) {
-		return await this.resultService.edit(dto);
-	}
-
-	@Delete()
-	async delete(@Body() dto: DeleteResultDTO) {
-		return await this.resultService.delete(dto);
+	@Delete("/:id")
+	async delete(@Param() params: GetResultByIdDTO) {
+		return await this.resultService.delete(params);
 	}
 }

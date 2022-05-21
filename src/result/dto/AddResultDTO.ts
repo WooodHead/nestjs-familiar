@@ -2,7 +2,7 @@ import { IsInt, IsPositive, IsUUID } from "class-validator";
 
 export class AddResultDTO {
 	@IsUUID()
-	playerId: string;
+	userId: string;
 
 	@IsUUID()
 	eventId: string;

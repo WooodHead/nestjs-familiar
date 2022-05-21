@@ -1,5 +1,14 @@
 import { EventType } from "@prisma/client";
-import { IsNotEmpty, IsString, IsUUID } from "class-validator";
+import { Type } from "class-transformer";
+import {
+	IsArray,
+	IsEnum,
+	IsNotEmpty,
+	IsString,
+	IsUUID,
+	MinLength,
+	ValidateNested,
+} from "class-validator";
 import { AddResultDTO } from "src/result/dto";
 
 export class AddEventDTO {
@@ -7,8 +16,7 @@ export class AddEventDTO {
 	@IsNotEmpty()
 	name: string;
 
-	@IsString()
-	@IsNotEmpty()
+	@IsEnum(EventType)
 	type: EventType;
 
 	@IsUUID()
@@ -16,6 +24,4 @@ export class AddEventDTO {
 
 	@IsUUID()
 	seasonId: string;
-
-	results: AddResultDTO[];
 }

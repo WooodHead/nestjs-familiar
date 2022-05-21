@@ -1,47 +1,54 @@
 import { Injectable } from "@nestjs/common";
+import { PrismaClient } from "@prisma/client";
 import { PrismaService } from "src/prisma/prisma.service";
-import { AddDeckDTO, DeleteDeckDTO, EditDeckDTO, GetDeckByIdDTO } from "./dto";
+import { AddDeckDTO, EditDeckDTO, GetDeckByIdDTO } from "./dto";
 
 @Injectable()
 export class DeckService {
-	private prismaService: PrismaService;
+	constructor(private prismaService: PrismaService) {}
 
-	constructor(prismaService: PrismaService) {
-		this.prismaService = prismaService;
+	async getAll(prisma: PrismaClient = this.prismaService) {
+		return await prisma.deck.findMany();
 	}
 
-	async getAll() {
-		return await this.prismaService.deck.findMany();
-	}
-
-	async getOneById(dto: GetDeckByIdDTO) {
-		return await this.prismaService.deck.findUnique({ where: { id: dto.id } });
-	}
-
-	async create(dto: AddDeckDTO) {
-		return await this.prismaService.deck.create({
+	async create(body: AddDeckDTO, prisma: PrismaClient = this.prismaService) {
+		return await prisma.deck.create({
 			data: {
-				name: dto.name,
-				archetype: dto.archetype,
-				colors: dto.colors,
+				name: body.name,
+				archetype: body.archetype,
+				colors: body.colors,
 			},
 		});
 	}
 
-	async edit(dto: EditDeckDTO) {
-		return await this.prismaService.deck.update({
-			where: { id: dto.id },
+	async getOneById(
+		params: GetDeckByIdDTO,
+		prisma: PrismaClient = this.prismaService
+	) {
+		return await prisma.deck.findUnique({ where: { id: params.id } });
+	}
+
+	async edit(
+		params: GetDeckByIdDTO,
+		body: EditDeckDTO,
+		prisma: PrismaClient = this.prismaService
+	) {
+		return await prisma.deck.update({
+			where: { id: params.id },
 			data: {
-				name: dto.name,
-				archetype: dto.archetype,
-				colors: dto.colors,
+				name: body.name,
+				archetype: body.archetype,
+				colors: body.colors,
 			},
 		});
 	}
 
-	async delete(dto: DeleteDeckDTO) {
-		return await this.prismaService.deck.delete({
-			where: { id: dto.id },
+	async delete(
+		params: GetDeckByIdDTO,
+		prisma: PrismaClient = this.prismaService
+	) {
+		return await prisma.deck.delete({
+			where: { id: params.id },
 		});
 	}
 }

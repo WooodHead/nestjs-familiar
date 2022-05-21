@@ -1,6 +1,6 @@
 import { IsUUID } from "class-validator";
 
-export class GetPlayerResultsDTO {
+export class GetAccountByIdDTO {
 	@IsUUID()
 	id: string;
 }

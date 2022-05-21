@@ -8,38 +8,34 @@ import {
 	Put,
 } from "@nestjs/common";
 import { DeckService } from "./deck.service";
-import { AddDeckDTO, DeleteDeckDTO, EditDeckDTO, GetDeckByIdDTO } from "./dto";
+import { AddDeckDTO, EditDeckDTO, GetDeckByIdDTO } from "./dto";
 
-@Controller("deck")
+@Controller("decks")
 export class DeckController {
-	private eventService: DeckService;
+	constructor(private deckService: DeckService) {}
 
-	constructor(eventService: DeckService) {
-		this.eventService = eventService;
+	@Post()
+	async add(@Body() body: AddDeckDTO) {
+		return await this.deckService.create(body);
 	}
 
 	@Get()
 	async getAll() {
-		return await this.eventService.getAll();
+		return await this.deckService.getAll();
 	}
 
 	@Get("/:id")
-	async getOneById(@Body() dto: GetDeckByIdDTO) {
-		return await this.eventService.getOneById(dto);
+	async getOneById(@Param() params: GetDeckByIdDTO) {
+		return await this.deckService.getOneById(params);
 	}
 
-	@Post()
-	async add(@Body() dto: AddDeckDTO) {
-		return await this.eventService.create(dto);
+	@Put("/:id")
+	async edit(@Param() params: GetDeckByIdDTO, @Body() body: EditDeckDTO) {
+		return await this.deckService.edit(params, body);
 	}
 
-	@Put()
-	async update(@Body() dto: EditDeckDTO) {
-		return await this.eventService.edit(dto);
-	}
-
-	@Delete()
-	async delete(@Body() dto: DeleteDeckDTO) {
-		return await this.eventService.delete(dto);
+	@Delete("/:id")
+	async delete(@Param() params: GetDeckByIdDTO) {
+		return await this.deckService.delete(params);
 	}
 }

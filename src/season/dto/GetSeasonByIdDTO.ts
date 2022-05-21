@@ -1,6 +1,6 @@
 import { IsUUID } from "class-validator";
 
-export class DeletePlayerDTO {
+export class GetSeasonByIdDTO {
 	@IsUUID()
 	id: string;
 }

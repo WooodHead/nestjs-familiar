@@ -7,44 +7,35 @@ import {
 	Post,
 	Put,
 } from "@nestjs/common";
-import {
-	AddEventDTO,
-	DeleteEventDTO,
-	EditEventDTO,
-	GetEventByIdDTO,
-} from "./dto";
+import { AddEventDTO, EditEventDTO, GetEventByIdDTO } from "./dto";
 import { EventService } from "./event.service";
 
 @Controller("events")
 export class EventController {
-	private eventService: EventService;
-
-	constructor(eventService: EventService) {
-		this.eventService = eventService;
-	}
+	constructor(private eventService: EventService) {}
 
 	@Get()
 	async getAll() {
 		return await this.eventService.getAll();
 	}
 
-	@Get("/:id")
-	async getOneById(@Body() dto: GetEventByIdDTO) {
-		return await this.eventService.getOneById(dto);
-	}
-
 	@Post()
-	async add(@Body() dto: AddEventDTO) {
-		return await this.eventService.create(dto);
+	async add(@Body() body: AddEventDTO) {
+		return await this.eventService.create(body);
 	}
 
-	@Put()
-	async update(@Body() dto: EditEventDTO) {
-		return await this.eventService.edit(dto);
+	@Get("/:id")
+	async getOneById(@Param() params: GetEventByIdDTO) {
+		return await this.eventService.getOneById(params);
 	}
 
-	@Delete()
-	async delete(@Body() dto: DeleteEventDTO) {
-		return await this.eventService.delete(dto);
+	@Put("/:id")
+	async update(@Param() params: GetEventByIdDTO, @Body() body: EditEventDTO) {
+		return await this.eventService.edit(params, body);
+	}
+
+	@Delete("/:id")
+	async delete(@Param() params: GetEventByIdDTO) {
+		return await this.eventService.delete(params);
 	}
 }

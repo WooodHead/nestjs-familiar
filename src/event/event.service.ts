@@ -1,64 +1,73 @@
 import { Injectable } from "@nestjs/common";
+import { EventStatus, PrismaClient } from "@prisma/client";
 import { PrismaService } from "src/prisma/prisma.service";
 import { AddResultDTO } from "src/result/dto";
-import {
-	AddEventDTO,
-	DeleteEventDTO,
-	EditEventDTO,
-	GetEventByIdDTO,
-} from "./dto";
+import { AddEventDTO, EditEventDTO, GetEventByIdDTO } from "./dto";
 
 @Injectable()
 export class EventService {
-	private prismaService: PrismaService;
+	constructor(private prismaService: PrismaService) {}
 
-	constructor(prismaService: PrismaService) {
-		this.prismaService = prismaService;
-	}
-
-	async getAll() {
-		return await this.prismaService.event.findMany({
+	async getAll(prisma: PrismaClient = this.prismaService) {
+		return await prisma.event.findMany({
 			include: { results: { orderBy: { rank: "asc" }, take: 1 } },
 		});
 	}
 
-	async getOneById(dto: GetEventByIdDTO) {
-		return await this.prismaService.event.findUnique({
-			where: { id: dto.id },
+	async getOneById(
+		params: GetEventByIdDTO,
+		prisma: PrismaClient = this.prismaService
+	) {
+		return await prisma.event.findUnique({
+			where: { id: params.id },
 			include: { results: { orderBy: { rank: "asc" }, take: 1 } },
 		});
 	}
 
-	async create(dto: AddEventDTO) {
-		return await this.prismaService.$transaction(async (prisma) => {
-			const event = await prisma.event.create({
-				data: {
-					name: dto.name,
-					type: dto.type,
-					leagueId: dto.leagueId,
-					seasonId: dto.seasonId,
-				},
-			});
+	async create(body: AddEventDTO, prisma: PrismaClient = this.prismaService) {
+		return await prisma.event.create({
+			data: {
+				name: body.name,
+				type: body.type,
+				leagueId: body.leagueId,
+				seasonId: body.seasonId,
+				status: EventStatus.SCHEDULED,
+			},
+		});
+		// return await prisma.$transaction(async (prisma) => {
+		// 	// const results = await prisma.result.createMany({
+		// 	// 	data: body.results.map((result: AddResultDTO) => ({
+		// 	// 		eventId: event.id,
+		// 	// 		userId: result.userId,
+		// 	// 		deckId: result.deckId,
+		// 	// 		score: result.score,
+		// 	// 		rank: result.rank,
 
-			const results = await prisma.result.createMany({
-				data: dto.results.map((result: AddResultDTO) => ({
-					eventId: event.id,
-					playerId: result.playerId,
-					deckId: result.deckId,
-					score: result.score,
-					rank: result.rank,
-				})),
-			});
+		// 	// 	})),
+		// 	// });
 
-			return { event, results };
+		// 	return { event, results };
+		// });
+	}
+
+	async edit(
+		params: GetEventByIdDTO,
+		body: EditEventDTO,
+		prisma: PrismaClient = this.prismaService
+	) {
+		return await prisma.event.update({
+			where: { id: params.id },
+			data: {
+				name: body.name,
+				type: body.type,
+			},
 		});
 	}
 
-	async edit(dto: EditEventDTO) {
-		throw new Error("Method not implemented.");
-	}
-
-	async delete(dto: DeleteEventDTO) {
-		await this.prismaService.result.delete({ where: { id: dto.id } });
+	async delete(
+		params: GetEventByIdDTO,
+		prisma: PrismaClient = this.prismaService
+	) {
+		return await prisma.result.delete({ where: { id: params.id } });
 	}
 }

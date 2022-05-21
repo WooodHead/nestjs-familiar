@@ -1,16 +1,23 @@
 import { Archetype, Color } from "@prisma/client";
-import { IsNotEmpty, IsString } from "class-validator";
+import {
+	IsArray,
+	IsEnum,
+	IsNotEmpty,
+	IsOptional,
+	IsString,
+} from "class-validator";
 
 export class AddDeckDTO {
 	@IsString()
 	@IsNotEmpty()
 	name: string;
 
-	@IsString()
 	@IsNotEmpty()
+	@IsEnum(Archetype)
 	archetype: Archetype;
 
-	@IsString()
-	@IsNotEmpty()
+	@IsOptional()
+	@IsArray()
+	@IsEnum(Color, { each: true })
 	colors: Color[];
 }

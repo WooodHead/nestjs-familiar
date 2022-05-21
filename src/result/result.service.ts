@@ -1,58 +1,58 @@
 import { Injectable } from "@nestjs/common";
+import { PrismaClient } from "@prisma/client";
 import { PrismaService } from "src/prisma/prisma.service";
-import {
-	AddResultDTO,
-	DeleteResultDTO,
-	EditResultDTO,
-	GetResultByIdDTO,
-} from "./dto";
+import { AddResultDTO, EditResultDTO, GetResultByIdDTO } from "./dto";
 
 @Injectable()
 export class ResultService {
-	private prismaService: PrismaService;
+	constructor(private prismaService: PrismaService) {}
 
-	constructor(prismaService: PrismaService) {
-		this.prismaService = prismaService;
+	async getAll(prisma: PrismaClient = this.prismaService) {
+		return await prisma.result.findMany();
 	}
 
-	async getAll() {
-		return await this.prismaService.result.findMany();
-	}
-
-	async getOneById(dto: GetResultByIdDTO) {
-		return await this.prismaService.result.findUnique({
-			where: { id: dto.id },
+	async getOneById(
+		params: GetResultByIdDTO,
+		prisma: PrismaClient = this.prismaService
+	) {
+		return await prisma.result.findUnique({
+			where: { id: params.id },
 		});
 	}
 
-	async create(dto: AddResultDTO) {
-		return await this.prismaService.result.create({
+	async create(body: AddResultDTO, prisma: PrismaClient = this.prismaService) {
+		return await prisma.result.create({
 			data: {
-				eventId: dto.eventId,
-				playerId: dto.playerId,
-				deckId: dto.deckId,
-				score: dto.score,
-				rank: dto.rank,
+				eventId: body.eventId,
+				userId: body.userId,
+				deckId: body.deckId,
+				score: body.score,
+				rank: body.rank,
 			},
 		});
 	}
 
-	async edit(dto: EditResultDTO) {
-		return await this.prismaService.result.update({
-			where: { id: dto.id },
+	async edit(
+		params: GetResultByIdDTO,
+		body: EditResultDTO,
+		prisma: PrismaClient = this.prismaService
+	) {
+		return await prisma.result.update({
+			where: { id: params.id },
 			data: {
-				eventId: dto.eventId,
-				playerId: dto.playerId,
-				deckId: dto.deckId,
-				score: dto.score,
-				rank: dto.rank,
+				deckId: body.deckId,
+				score: body.score,
+				rank: body.rank,
 			},
 		});
 	}
 
-	async delete(dto: DeleteResultDTO) {
-		return await this.prismaService.result.delete({
-			where: { id: dto.id },
+	async delete(
+		params: GetResultByIdDTO,
+		prisma: PrismaClient = this.prismaService
+	) {
+		return await prisma.result.delete({
+			where: { id: params.id },
 		});
 	}
 }

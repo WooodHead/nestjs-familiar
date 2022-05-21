@@ -1,6 +1,6 @@
 import { IsUUID } from "class-validator";
 
-export class GetPlayerByIdDTO {
+export class GetSubscriptionByIdDTO {
 	@IsUUID()
 	id: string;
 }
